@@ -123,6 +123,37 @@ router.patch('/api/requests/:id', function(req, res) {
   });
 
 
+/* 
+Action:      DESTROY
+Method:      DELETE
+URI:        /api/requests/9plok8m7nijh6ubg5vyft4
+Description: delete a spacific article with article ID
+*/
+router.delete('/api/requests/:id', (req, res) => {
+    Requests.findById(req.params.id)
+    .then ((request) => {
+        if (request) {
+            // pass the result of mongose  .delete method to next.then statment
+            return request.remove();
+        } else {
+            // if we couldent find a document with the matching ID
+            res.status(404).json({
+                error: {
+                    name: "DocumentNotFound Error",
+                    message: "The Provided ID does not match any documents"
+                }
+            })
+        }
+    })
+    .then(() => {
+        // if delete succeded, return 204 and no JSON
+        res.status(204).end();
+    })
+    // catch any errors that may occur
+    .catch((error) => {
+        res.status(500).json({error: error})
+    })
+})
 
 
 
