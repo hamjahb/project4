@@ -33,7 +33,7 @@ const router = express.Router()
 Action:      INDEX
 Method:      GET
 URI:        /api/requests
-Description: Get all pending requests
+Description: Get  pending requests
 */
 router.get('/api/requests', (req, res) => {
     Requests.find({})
@@ -44,6 +44,28 @@ router.get('/api/requests', (req, res) => {
         res.status(500).json({error: error})
     })
 })
+
+
+/* 
+Action:      CREATE
+Method:      POST
+URI:        /api/requests
+Description: create a new request
+*/
+
+router.post('/api/requests', (req, res) => {
+    Requests.create(req.body.article)
+/*  on a succesful create action respond with 201
+    http status and content of new article */
+    .then((newRequest) => {
+        res.status(201).json({message: 'created new request'})
+    })
+/*  catch any error that may occur */
+    .catch((error) => {
+        res.status(500).json({error: error})
+    })
+})
+
 
 
 /* 
@@ -66,6 +88,11 @@ router.get('/api/requests/:id', (req, res) => {
         } 
     })
 })
+
+
+
+
+
 
 
 
