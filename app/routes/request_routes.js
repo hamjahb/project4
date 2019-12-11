@@ -46,6 +46,28 @@ router.get('/api/requests', (req, res) => {
 })
 
 
+/* 
+Action:      SHOW
+Method:      GET
+URI:        /api/requests/42x3sdc5vfg6fb7h8njki9
+Description: Get a spacific request  by request  ID
+*/
+router.get('/api/requests/:id', (req, res) => {
+    Requests.findById(req.params.id, (error, request) => {
+        if(request){
+            res.status(200).json({message: 'dis be show for requests'})
+        } else {
+            res.status(404).json({
+                error: {
+                  name: "DocumentNotFoundError",
+                  message: "the provided id doesn't match any document"
+                }
+            })
+        } 
+    })
+})
+
+
 
 // exports router to server
 module.exports = router
