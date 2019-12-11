@@ -90,7 +90,37 @@ router.get('/api/requests/:id', (req, res) => {
 })
 
 
-
+/**
+ * Action:      UPDATE
+ * Method:      PATCH
+* URI:          /api/requests/5d664b8b68b4f5092aba18e9
+* Description:  Update a request by request ID
+ */
+router.patch('/api/requests/:id', function(req, res) {
+    Requests.findById(req.params.id)
+      .then(function(request) {
+        if(request) {
+          // Pass the result of Mongoose's `.update` method to the next `.then`
+          return request.update(req.body.article);
+        } else {
+          // If we couldn't find a document with the matching ID
+          res.status(404).json({
+            error: {
+              name: 'DocumentNotFoundError',
+              message: 'The provided ID doesn\'t match any documents'
+            }
+          });
+        }
+      })
+      .then(function() {
+        // If the update succeeded, return 204 and no JSON
+        res.status(204).end();
+      })
+      // Catch any errors that might occur
+      .catch(function(error) {
+        res.status(500).json({ error: error });
+      });
+  });
 
 
 
