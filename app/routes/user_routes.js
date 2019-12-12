@@ -42,10 +42,13 @@ router.post('/sign-up', (req, res, next) => {
     // generate a hash from the provided password, returning a promise
     .then(() => bcrypt.hash(req.body.credentials.password, bcryptSaltRounds))
     .then(hash => {
+      console.log("creatObaid")
       // return necessary params to create a user
       return {
         email: req.body.credentials.email,
-        hashedPassword: hash
+        hashedPassword: hash,
+        role: req.body.credentials.role,
+        active:req.body.credentials.active
       }
     })
     // create user with provided email and hashed password

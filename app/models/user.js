@@ -9,7 +9,27 @@ const userSchema = new mongoose.Schema({
   hashedPassword: {
     type: String,
     required: true
+  }, 
+  active: {
+    type: Boolean,
+    default:false
+    
   },
+  role: {
+    type: String,
+    default: 'patient',
+    enum: ["patient", "assistant", "admin"]
+   },
+
+   assistant:{
+          carDescription:{type:String} ,
+          availability: { type :Boolean,default:true}
+   },
+   patient: {
+        healthConditions:{type:Array }
+   },
+
+
   token: String
 }, {
   timestamps: true,
