@@ -3,11 +3,11 @@ const mongoose = require('mongoose')
 const requestSchema = new mongoose.Schema({
     assistantId: {
     type: String,
-    required: true
+
   },
   date: {
     type: Date,
-    required: true
+  
   },
   trip:{
       start:String,
@@ -43,4 +43,4 @@ const requestSchema = new mongoose.Schema({
   timestamps: true
 })
 
-module.exports = mongoose.model('Request', exampleSchema)
+module.exports = mongoose.model('Request', requestSchema)

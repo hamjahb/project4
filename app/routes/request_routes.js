@@ -35,10 +35,10 @@ Method:      GET
 URI:        /api/requests
 Description: Get  pending requests
 */
-router.get('/api/requests', (req, res) => {
+router.get('/api/requests', requireToken,(req, res) => {
     Requests.find({})
     .then((request) => {
-        res.status(200).json({message: "dis shows all pending requests"})
+        res.status(200).json({message: request})
     })
     .catch((error) => {
         res.status(500).json({error: error})
@@ -53,17 +53,16 @@ URI:        /api/requests
 Description: create a new request
 */
 
-router.post('/api/requests', (req, res) => {
-    Requests.create(req.body.article)
+router.post('/api/requests', requireToken,(req, res, next ) => {
+    req.body.request.patient = req.user.id
+    Requests.create(req.body.request)
 /*  on a succesful create action respond with 201
     http status and content of new article */
     .then((newRequest) => {
-        res.status(201).json({message: 'created new request'})
+        res.status(201).json({newRequest:newRequest.toObject()})
     })
 /*  catch any error that may occur */
-    .catch((error) => {
-        res.status(500).json({error: error})
-    })
+    .catch(next)
 })
 
 
@@ -74,7 +73,10 @@ Method:      GET
 URI:        /api/requests/42x3sdc5vfg6fb7h8njki9
 Description: Get a spacific request  by request  ID
 */
-router.get('/api/requests/:id', (req, res) => {
+router.get('/api/requests/:id',requireToken, (req, res, next) => {
+      console.log(req.user.id,"req.user.id") 
+      console.log(req.params.id,"req.params.id")
+
     Requests.findById(req.params.id, (error, request) => {
         if(request){
             res.status(200).json({message: 'dis be show for requests'})

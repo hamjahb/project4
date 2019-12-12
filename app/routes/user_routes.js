@@ -28,6 +28,7 @@ const router = express.Router()
 // SIGN UP
 // POST /sign-up
 router.post('/sign-up', (req, res, next) => {
+  console.log(req.body.credentials.toObject)
   // start a promise chain, so that any errors will pass to `handle`
   Promise.resolve(req.body.credentials)
     // reject any requests where `credentials.password` is not present, or where
@@ -42,13 +43,16 @@ router.post('/sign-up', (req, res, next) => {
     // generate a hash from the provided password, returning a promise
     .then(() => bcrypt.hash(req.body.credentials.password, bcryptSaltRounds))
     .then(hash => {
-      console.log("creatObaid")
+     
       // return necessary params to create a user
       return {
+        name:req.body.credentials.name,
         email: req.body.credentials.email,
         hashedPassword: hash,
         role: req.body.credentials.role,
-        active:req.body.credentials.active
+        active:req.body.credentials.active,
+        age:req.body.credentials.age,
+        phone:req.body.credentials.phone
       }
     })
     // create user with provided email and hashed password

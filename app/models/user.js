@@ -1,6 +1,12 @@
 const mongoose = require('mongoose')
 
 const userSchema = new mongoose.Schema({
+
+  name: {
+    type: String,
+   
+  },
+
   email: {
     type: String,
     required: true,
@@ -17,8 +23,8 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    default: 'patient',
-    enum: ["patient", "assistant", "admin"]
+   
+    enum: ["Patient", "Assistant", "Admin"]
    },
 
    assistant:{
@@ -26,10 +32,13 @@ const userSchema = new mongoose.Schema({
           availability: { type :Boolean,default:true}
    },
    patient: {
-        healthConditions:{type:Array }
+        healthConditions:{type:Array },
+    
+    
    },
-
-
+   age:{type:Number},
+   phone:{type:String},
+   
   token: String
 }, {
   timestamps: true,
