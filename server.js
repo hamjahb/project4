@@ -7,6 +7,7 @@ const cors = require('cors')
 // require route files
 const exampleRoutes = require('./app/routes/example_routes')
 const userRoutes = require('./app/routes/user_routes')
+const requestRoutes = require('./app/routes/request_routes')
 
 // require error handling middleware
 const errorHandler = require('./lib/error_handler')
@@ -30,9 +31,7 @@ const expressPort = 3000
 
 // establish database connection
 mongoose.Promise = global.Promise
-mongoose.connect(db, {
-  useMongoClient: true
-})
+mongoose.connect(db, {useNewUrlParser: true})
 
 // instantiate express application object
 const app = express()
@@ -65,6 +64,7 @@ app.use(requestLogger)
 // register route files
 app.use(exampleRoutes)
 app.use(userRoutes)
+app.use(requestRoutes)
 
 // register error handling middleware
 // note that this comes after the route middlewares, because it needs to be
