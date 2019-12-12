@@ -5,7 +5,7 @@ const passport = require('passport')
 
 // pull in Mongoose model for examples
 //  ******** change this when models created ******
-const Requests = require('../models/example')
+const Requests = require('../models/request')
 
 // this is a collection of methods that help us detect situations when we need
 // to throw a custom error
