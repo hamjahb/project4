@@ -30,7 +30,7 @@ const router = express.Router()
 // INDEX
 // GET /examples
 router.get('/examples', requireToken, (req, res, next) => {
-  
+  console.log(req)
   // Option 1 get user's examples
   Example.find({owner: req.user.id})
     .then(examples => res.status(200).json({examples: examples}))

@@ -8,12 +8,13 @@
     "test": "mocha --exit",
     "server": "nodemon server.js",
     "serve": "nodemon server.js",
-    "s": "nodemon server.js",
+    "s": "nodemon ",
     "debug-server": "DEBUG=express:* nodemon server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "accesscontrol": "^2.2.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
