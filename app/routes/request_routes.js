@@ -53,7 +53,7 @@ URI:        /api/requests
 Description: create a new request
 */
 
-router.post('/api/requests',(req, res) => {
+router.post('/api/requests', requireToken,(req, res) => {
     // req.body.request.patient = req.user.id
     Requests.create(req.body.request)
 /*  on a succesful create action respond with 201
@@ -81,7 +81,7 @@ router.get('/api/requests/:id',requireToken, (req, res, next) => {
 
     Requests.findById(req.params.id, (error, request) => {
         if(request){
-            res.status(200).json({message: 'dis be show for requests'})
+            res.status(200).json({request: request})
         } else {
             res.status(404).json({
                 error: {
@@ -100,7 +100,7 @@ router.get('/api/requests/:id',requireToken, (req, res, next) => {
 * URI:          /api/requests/5d664b8b68b4f5092aba18e9
 * Description:  Update a request by request ID
  */
-router.patch('/api/requests/:id', function(req, res) {
+router.patch('/api/requests/:id', requireToken, function(req, res) {
     Requests.findById(req.params.id)
       .then(function(request) {
         if(request) {
@@ -133,7 +133,7 @@ Method:      DELETE
 URI:        /api/requests/9plok8m7nijh6ubg5vyft4
 Description: delete a spacific article with article ID
 */
-router.delete('/api/requests/:id', (req, res) => {
+router.delete('/api/requests/:id', requireToken, (req, res) => {
     Requests.findById(req.params.id)
     .then ((request) => {
         if (request) {
