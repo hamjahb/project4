@@ -53,16 +53,18 @@ URI:        /api/requests
 Description: create a new request
 */
 
-router.post('/api/requests', requireToken,(req, res, next ) => {
-    req.body.request.patient = req.user.id
+router.post('/api/requests',(req, res) => {
+    // req.body.request.patient = req.user.id
     Requests.create(req.body.request)
 /*  on a succesful create action respond with 201
     http status and content of new article */
     .then((newRequest) => {
-        res.status(201).json({newRequest:newRequest.toObject()})
+        res.status(201).json({newRequest:newRequest})
     })
 /*  catch any error that may occur */
-    .catch(next)
+    .catch((error) => {
+        res.status(500).json({error: error})
+    })   
 })
 
 
