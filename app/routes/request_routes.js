@@ -53,16 +53,18 @@ URI:        /api/requests
 Description: create a new request
 */
 
-router.post('/api/requests', requireToken,(req, res, next ) => {
-    req.body.request.patient = req.user.id
+router.post('/api/requests',(req, res) => {
+    // req.body.request.patient = req.user.id
     Requests.create(req.body.request)
 /*  on a succesful create action respond with 201
     http status and content of new article */
     .then((newRequest) => {
-        res.status(201).json({newRequest:newRequest.toObject()})
+        res.status(201).json({newRequest:newRequest})
     })
 /*  catch any error that may occur */
-    .catch(next)
+    .catch((error) => {
+        res.status(500).json({error: error})
+    })   
 })
 
 
@@ -83,8 +85,8 @@ router.get('/api/requests/:id',requireToken, (req, res, next) => {
         } else {
             res.status(404).json({
                 error: {
-                  name: "DocumentNotFoundError",
-                  message: "the provided id doesn't match any document"
+                  name: handle404.name,
+                  message: handle404.message
                 }
             })
         } 
@@ -108,8 +110,8 @@ router.patch('/api/requests/:id', function(req, res) {
           // If we couldn't find a document with the matching ID
           res.status(404).json({
             error: {
-              name: 'DocumentNotFoundError',
-              message: 'The provided ID doesn\'t match any documents'
+              name: handle404.name,
+              message: handle404.message
             }
           });
         }
@@ -141,8 +143,8 @@ router.delete('/api/requests/:id', (req, res) => {
             // if we couldent find a document with the matching ID
             res.status(404).json({
                 error: {
-                    name: "DocumentNotFound Error",
-                    message: "The Provided ID does not match any documents"
+                    name: handle404.name,
+                    message: handle404.message
                 }
             })
         }
