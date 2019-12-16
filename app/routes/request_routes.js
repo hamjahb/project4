@@ -171,7 +171,7 @@ router.patch('/api/requests/:id', requireToken, function(req, res) {
                 name: 'DocumentNotFoundError',
                 message: 'The provided ID doesn\'t match any documents'
             }
-          });
+          })
         }
       })
       .then(function() {
