@@ -68,7 +68,7 @@ router.get('/api/requests/pending', requireToken,(req, res) => {
 /* 
 Action:      INDEX
 Method:      GET
-URI:        /api/requests/token
+URI:        /api/requests/patientrequests
 Description: Get all request for a spacific patient
 */
 router.get('/api/requests/patientrequests', requireToken,(req, res) => {
@@ -78,6 +78,23 @@ router.get('/api/requests/patientrequests', requireToken,(req, res) => {
     
     
     Requests.find({patient: req.user._id})
+    .then((requests) => {
+        res.status(200).json({requests: requests})
+    })
+    .catch((error) => {
+        res.status(500).json({error: error})
+    })
+})
+
+
+/* 
+Action:      INDEX
+Method:      GET
+URI:        /api/requests/availabledrivers
+Description: Get all request for available drivers
+*/
+router.get('/api/requests/availabledrivers', requireToken,(req, res) => {  
+    User.find({$and: [ {role: "Assistant"}, {'assistant.availability': true}]})
     .then((requests) => {
         res.status(200).json({requests: requests})
     })
