@@ -5,7 +5,9 @@ const passport = require('passport')
 
 // pull in Mongoose model for examples
 //  ******** change this when models created ******
-const Requests = require('../models/request')
+const Requests = require('../models/request');
+
+const User = require('../models/user')
 
 // this is a collection of methods that help us detect situations when we need
 // to throw a custom error
@@ -56,6 +58,45 @@ router.get('/api/requests/pending', requireToken,(req, res) => {
     Requests.find({requestStatus: 'pending' })
     .then((request) => {
         res.status(200).json({message: request})
+    })
+    .catch((error) => {
+        res.status(500).json({error: error})
+    })
+})
+
+
+/* 
+Action:      INDEX
+Method:      GET
+URI:        /api/requests/patientrequests
+Description: Get all request for a spacific patient
+*/
+router.get('/api/requests/patientrequests', requireToken,(req, res) => {
+    console.log(req.user._id);
+    // const currentUser = User.find({_id: req.user});
+    // console.log(currentUser._id);
+    
+    
+    Requests.find({patient: req.user._id})
+    .then((requests) => {
+        res.status(200).json({requests: requests})
+    })
+    .catch((error) => {
+        res.status(500).json({error: error})
+    })
+})
+
+
+/* 
+Action:      INDEX
+Method:      GET
+URI:        /api/requests/availabledrivers
+Description: Get all request for available drivers
+*/
+router.get('/api/requests/availabledrivers', requireToken,(req, res) => {  
+    User.find({$and: [ {role: "Assistant"}, {'assistant.availability': true}]})
+    .then((requests) => {
+        res.status(200).json({requests: requests})
     })
     .catch((error) => {
         res.status(500).json({error: error})
