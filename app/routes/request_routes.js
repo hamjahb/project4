@@ -54,7 +54,9 @@ Description: create a new request
 */
 
 router.post('/api/requests', requireToken,(req, res, next ) => {
-    req.body.request.patient = req.user.id
+        console.log(req.body.request,"reqoooooooooooooo")
+    
+  req.body.request.patient = req.user.id
     Requests.create(req.body.request)
 /*  on a succesful create action respond with 201
     http status and content of new article */
