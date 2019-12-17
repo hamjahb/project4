@@ -98,6 +98,7 @@ router.post('/sign-in', (req, res, next) => {
       }
     })
     .then(user => {
+      const temp=new User()
       // return status 201, the email, and the new token
       res.status(201).json({ user: user.toObject() })
     })
@@ -145,6 +146,7 @@ router.delete('/sign-out', requireToken, (req, res, next) => {
     .catch(next)
 })
 
+<<<<<<< HEAD
 
 /**
  * Action:      UPDATE
@@ -165,6 +167,32 @@ router.patch('/api/user/:id', requireToken, function(req, res) {
   res.status(500).json({ error: error });
   });
 });
+=======
+// update user
+// 
+router.patch('/userupdate', requireToken, (req, res, next) => {
+
+  let user
+  const body=req.body.user;
+  User.findOneAndUpdate(req.user.id,req.body.user,{new:true})
+  // `req.user` will be determined by decoding the token payload
+
+    // save user outside the promise chain
+    .then(record => { user = record })
+   
+    .then(() => {
+      user.update(body.email)   
+      user.save() 
+      console.log(user,body)
+      return user
+    })
+
+    // respond with no content and status 200
+    .then(() => res.sendStatus(204))
+    // pass any errors along to the error handler
+    .catch(next)
+})
+>>>>>>> d44f17c678facda750f24c2f58853660de6565c3
 
 
 
