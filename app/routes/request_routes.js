@@ -87,6 +87,29 @@ router.get('/api/requests/patientrequests', requireToken,(req, res) => {
 })
 
 
+
+/* 
+Action:      INDEX
+Method:      GET
+URI:        /api/requests/patientrequests
+Description: Get all request for a spacific assistant
+*/
+router.get('/api/requests/assistantrequests', requireToken,(req, res) => {
+    console.log(req.user._id);
+    // const currentUser = User.find({_id: req.user});
+    // console.log(currentUser._id);
+    
+    
+    Requests.find({assistantId: req.user._id})
+    .then((requests) => {
+        res.status(200).json({requests: requests})
+    })
+    .catch((error) => {
+        res.status(500).json({error: error})
+    })
+})
+
+
 /* 
 Action:      INDEX
 Method:      GET
@@ -124,7 +147,6 @@ router.post('/api/requests', requireToken,(req, res) => {
         res.status(500).json({error: error})
     })   
 })
-
 
 
 /* 

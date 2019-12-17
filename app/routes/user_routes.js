@@ -145,4 +145,27 @@ router.delete('/sign-out', requireToken, (req, res, next) => {
     .catch(next)
 })
 
+
+/**
+ * Action:      UPDATE
+ * Method:      PATCH
+* URI:          /api/user/5d664b8b68b4f5092aba18e9
+* Description:  Update an Assistant for availability
+ */
+router.patch('/api/user/:id', requireToken, function(req, res) {
+  User.findByIdAndUpdate(req.params.id, 
+      {'assistant.availability':true},
+      {new: true})
+  .then(function(response) {
+  // If the update succeeded, return 204 and no JSON
+  res.status(204).send(response);
+  })
+  // Catch any errors that might occur
+  .catch(function(error) {
+  res.status(500).json({ error: error });
+  });
+});
+
+
+
 module.exports = router
