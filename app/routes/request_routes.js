@@ -5,7 +5,9 @@ const passport = require('passport')
 
 // pull in Mongoose model for examples
 //  ******** change this when models created ******
-const Requests = require('../models/request')
+const Requests = require('../models/request');
+
+const User = require('../models/user')
 
 // this is a collection of methods that help us detect situations when we need
 // to throw a custom error
@@ -33,12 +35,68 @@ const router = express.Router()
 Action:      INDEX
 Method:      GET
 URI:        /api/requests
-Description: Get  pending requests
+Description: Get  all requests
 */
 router.get('/api/requests', requireToken,(req, res) => {
     Requests.find({})
     .then((request) => {
         res.status(200).json({message: request})
+    })
+    .catch((error) => {
+        res.status(500).json({error: error})
+    })
+})
+
+
+/* 
+Action:      INDEX
+Method:      GET
+URI:        /api/requests/pending
+Description: Get pending requests
+*/
+router.get('/api/requests/pending', requireToken,(req, res) => {
+    Requests.find({requestStatus: 'pending' })
+    .then((request) => {
+        res.status(200).json({message: request})
+    })
+    .catch((error) => {
+        res.status(500).json({error: error})
+    })
+})
+
+
+/* 
+Action:      INDEX
+Method:      GET
+URI:        /api/requests/patientrequests
+Description: Get all request for a spacific patient
+*/
+router.get('/api/requests/patientrequests', requireToken,(req, res) => {
+    console.log(req.user._id);
+    // const currentUser = User.find({_id: req.user});
+    // console.log(currentUser._id);
+    
+    
+    Requests.find({patient: req.user._id})
+    .then((requests) => {
+        res.status(200).json({requests: requests})
+    })
+    .catch((error) => {
+        res.status(500).json({error: error})
+    })
+})
+
+
+/* 
+Action:      INDEX
+Method:      GET
+URI:        /api/requests/availabledrivers
+Description: Get all request for available drivers
+*/
+router.get('/api/requests/availabledrivers', requireToken,(req, res) => {  
+    User.find({$and: [ {role: "Assistant"}, {'assistant.availability': true}]})
+    .then((requests) => {
+        res.status(200).json({requests: requests})
     })
     .catch((error) => {
         res.status(500).json({error: error})
@@ -53,18 +111,19 @@ URI:        /api/requests
 Description: create a new request
 */
 
-router.post('/api/requests', requireToken,(req, res, next ) => {
-        console.log(req.body.request,"reqoooooooooooooo")
-    
-  req.body.request.patient = req.user.id
+router.post('/api/requests', requireToken,(req, res) => {
+  
+     req.body.request.patient = req.user.id
     Requests.create(req.body.request)
-/*  on a succesful create action respond with 201
+    /*  on a succesful create action respond with 201
     http status and content of new article */
     .then((newRequest) => {
-        res.status(201).json({newRequest:newRequest.toObject()})
+        res.status(201).json({newRequest:newRequest})
     })
-/*  catch any error that may occur */
-    .catch(next)
+    /*  catch any error that may occur */
+    .catch((error) => {
+        res.status(500).json({error: error})
+    })   
 })
 
 
@@ -81,12 +140,12 @@ router.get('/api/requests/:id',requireToken, (req, res, next) => {
 
     Requests.findById(req.params.id, (error, request) => {
         if(request){
-            res.status(200).json({message: 'dis be show for requests'})
+            res.status(200).json({request: request})
         } else {
             res.status(404).json({
                 error: {
-                  name: "DocumentNotFoundError",
-                  message: "the provided id doesn't match any document"
+                    name: 'DocumentNotFoundError',
+                    message: 'The provided ID doesn\'t match any documents'
                 }
             })
         } 
@@ -100,20 +159,20 @@ router.get('/api/requests/:id',requireToken, (req, res, next) => {
 * URI:          /api/requests/5d664b8b68b4f5092aba18e9
 * Description:  Update a request by request ID
  */
-router.patch('/api/requests/:id', function(req, res) {
+router.patch('/api/requests/:id', requireToken, function(req, res) {
     Requests.findById(req.params.id)
       .then(function(request) {
         if(request) {
           // Pass the result of Mongoose's `.update` method to the next `.then`
-          return request.update(req.body.article);
+          return request.update(req.body.request);
         } else {
           // If we couldn't find a document with the matching ID
           res.status(404).json({
             error: {
-              name: 'DocumentNotFoundError',
-              message: 'The provided ID doesn\'t match any documents'
+                name: 'DocumentNotFoundError',
+                message: 'The provided ID doesn\'t match any documents'
             }
-          });
+          })
         }
       })
       .then(function() {
@@ -133,7 +192,7 @@ Method:      DELETE
 URI:        /api/requests/9plok8m7nijh6ubg5vyft4
 Description: delete a spacific article with article ID
 */
-router.delete('/api/requests/:id', (req, res) => {
+router.delete('/api/requests/:id', requireToken, (req, res) => {
     Requests.findById(req.params.id)
     .then ((request) => {
         if (request) {
@@ -143,8 +202,8 @@ router.delete('/api/requests/:id', (req, res) => {
             // if we couldent find a document with the matching ID
             res.status(404).json({
                 error: {
-                    name: "DocumentNotFound Error",
-                    message: "The Provided ID does not match any documents"
+                    name: 'DocumentNotFoundError',
+                    message: 'The provided ID doesn\'t match any documents'
                 }
             })
         }
