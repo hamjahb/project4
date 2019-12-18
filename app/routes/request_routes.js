@@ -113,6 +113,51 @@ router.get('/api/requests/assistantrequests', requireToken,(req, res) => {
 /* 
 Action:      INDEX
 Method:      GET
+URI:        /api/requests/completedpatientrequests
+Description: Get all compleated requests for a spacific patient
+*/
+router.get('/api/requests/completedpatientrequests', requireToken,(req, res) => {
+    // console.log(req.user._id);
+    // const currentUser = User.find({_id: req.user});
+    // console.log(currentUser._id);
+    
+    
+    Requests.find({$and: [ {patient: req.user.id}, {completed: true}]})
+    .then((requests) => {
+        res.status(200).json({requests: requests})
+    })
+    .catch((error) => {
+        res.status(500).json({error: error})
+    })
+})
+
+
+/* 
+Action:      INDEX
+Method:      GET
+URI:        /api/requests/completedpatientrequests
+Description: Get all compleated requests for a spacific assistant
+*/
+router.get('/api/requests/completedassistantrequests', requireToken,(req, res) => {
+    // console.log(req.user._id);
+    // const currentUser = User.find({_id: req.user});
+    // console.log(currentUser._id);
+    
+    
+    Requests.find({$and: [ {assistantId: req.user.id}, {completed: true}]})
+    .then((requests) => {
+        res.status(200).json({requests: requests})
+    })
+    .catch((error) => {
+        res.status(500).json({error: error})
+    })
+})
+
+
+
+/* 
+Action:      INDEX
+Method:      GET
 URI:        /api/requests/availabledrivers
 Description: Get all request for available drivers
 */

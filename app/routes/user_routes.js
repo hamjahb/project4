@@ -146,7 +146,6 @@ router.delete('/sign-out', requireToken, (req, res, next) => {
     .catch(next)
 })
 
-<<<<<<< HEAD
 
 /**
  * Action:      UPDATE
@@ -155,8 +154,10 @@ router.delete('/sign-out', requireToken, (req, res, next) => {
 * Description:  Update an Assistant for availability
  */
 router.patch('/api/user/:id', requireToken, function(req, res) {
+
+  
   User.findByIdAndUpdate(req.params.id, 
-      {'assistant.availability':true},
+      {$set: {'assistant.availability':!assistant.availability}},
       {new: true})
   .then(function(response) {
   // If the update succeeded, return 204 and no JSON
@@ -167,7 +168,8 @@ router.patch('/api/user/:id', requireToken, function(req, res) {
   res.status(500).json({ error: error });
   });
 });
-=======
+
+
 // update user
 // 
 router.patch('/userupdate', requireToken, (req, res, next) => {
@@ -192,7 +194,6 @@ router.patch('/userupdate', requireToken, (req, res, next) => {
     // pass any errors along to the error handler
     .catch(next)
 })
->>>>>>> d44f17c678facda750f24c2f58853660de6565c3
 
 
 
