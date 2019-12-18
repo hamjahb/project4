@@ -87,6 +87,74 @@ router.get('/api/requests/patientrequests', requireToken,(req, res) => {
 })
 
 
+
+/* 
+Action:      INDEX
+Method:      GET
+URI:        /api/requests/patientrequests
+Description: Get all request for a spacific assistant
+*/
+router.get('/api/requests/assistantrequests', requireToken,(req, res) => {
+    console.log(req.user._id);
+    // const currentUser = User.find({_id: req.user});
+    // console.log(currentUser._id);
+    
+    
+    Requests.find({assistantId: req.user._id})
+    .then((requests) => {
+        res.status(200).json({requests: requests})
+    })
+    .catch((error) => {
+        res.status(500).json({error: error})
+    })
+})
+
+
+/* 
+Action:      INDEX
+Method:      GET
+URI:        /api/requests/completedpatientrequests
+Description: Get all compleated requests for a spacific patient
+*/
+router.get('/api/requests/completedpatientrequests', requireToken,(req, res) => {
+    // console.log(req.user._id);
+    // const currentUser = User.find({_id: req.user});
+    // console.log(currentUser._id);
+    
+    
+    Requests.find({$and: [ {patient: req.user.id}, {completed: true}]})
+    .then((requests) => {
+        res.status(200).json({requests: requests})
+    })
+    .catch((error) => {
+        res.status(500).json({error: error})
+    })
+})
+
+
+/* 
+Action:      INDEX
+Method:      GET
+URI:        /api/requests/completedpatientrequests
+Description: Get all compleated requests for a spacific assistant
+*/
+router.get('/api/requests/completedassistantrequests', requireToken,(req, res) => {
+    // console.log(req.user._id);
+    // const currentUser = User.find({_id: req.user});
+    // console.log(currentUser._id);
+    
+    
+    Requests.find({$and: [ {assistantId: req.user.id}, {completed: true}]})
+    .then((requests) => {
+        res.status(200).json({requests: requests})
+    })
+    .catch((error) => {
+        res.status(500).json({error: error})
+    })
+})
+
+
+
 /* 
 Action:      INDEX
 Method:      GET
@@ -127,7 +195,6 @@ router.post('/api/requests', requireToken,(req, res) => {
 })
 
 
-
 /* 
 Action:      SHOW
 Method:      GET
@@ -161,29 +228,29 @@ router.get('/api/requests/:id',requireToken, (req, res, next) => {
  */
 router.patch('/api/requests/:id', requireToken, function(req, res) {
     Requests.findById(req.params.id)
-      .then(function(request) {
-        if(request) {
-          // Pass the result of Mongoose's `.update` method to the next `.then`
-          return request.update(req.body.request);
-        } else {
-          // If we couldn't find a document with the matching ID
-          res.status(404).json({
-            error: {
-                name: 'DocumentNotFoundError',
-                message: 'The provided ID doesn\'t match any documents'
-            }
-          })
+    .then(function(request) {
+    if(request) {
+        // Pass the result of Mongoose's `.update` method to the next `.then`
+        return request.update(req.body.request);
+    } else {
+        // If we couldn't find a document with the matching ID
+        res.status(404).json({
+        error: {
+            name: 'DocumentNotFoundError',
+            message: 'The provided ID doesn\'t match any documents'
         }
-      })
-      .then(function() {
-        // If the update succeeded, return 204 and no JSON
-        res.status(204).end();
-      })
-      // Catch any errors that might occur
-      .catch(function(error) {
-        res.status(500).json({ error: error });
-      });
-  });
+        })
+    }
+    })
+    .then(function() {
+    // If the update succeeded, return 204 and no JSON
+    res.status(204).end();
+    })
+    // Catch any errors that might occur
+    .catch(function(error) {
+    res.status(500).json({ error: error });
+    });
+});
 
 
 /* 
