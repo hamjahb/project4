@@ -17,6 +17,18 @@ server is implemented in heroku .
 - express.js
 - mongoDB
 - passport
+- monggoose
+
+
+## diagrams
+
+### ERD
+![ERD](images/erd.png)
+
+### Use Case
+![useCase](images/useCase.png)
+
+
 
 ## list of API calls
 
