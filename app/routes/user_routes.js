@@ -195,6 +195,23 @@ router.patch('/userupdate', requireToken, (req, res, next) => {
     .catch(next)
 })
 
+//get user 
+router.get('/api/user/:id',requireToken, (req, res, next) => {
+  console.log(req.user.id,"req.user.id") 
+  console.log(req.params.id,"req.params.id")
 
+User.findById(req.params.id, (error, user) => {
+    if(user){
+        res.status(200).json({user: user})
+    } else {
+        res.status(404).json({
+            error: {
+                name: 'DocumentNotFoundError',
+                message: 'The provided ID doesn\'t match any documents'
+            }
+        })
+    } 
+})
+})
 
 module.exports = router
