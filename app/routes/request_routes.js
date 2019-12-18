@@ -87,6 +87,7 @@ router.get('/api/requests/patientrequests', requireToken,(req, res) => {
 })
 
 
+
 /* 
 Action:      INDEX
 Method:      GET
@@ -160,6 +161,7 @@ router.get('/api/requests/:id',requireToken, (req, res, next) => {
 * Description:  Update a request by request ID
  */
 router.patch('/api/requests/:id', requireToken, function(req, res) {
+    console.log(req.params.id,"sss")
     Requests.findById(req.params.id)
       .then(function(request) {
         if(request) {
@@ -218,7 +220,24 @@ router.delete('/api/requests/:id', requireToken, (req, res) => {
     })
 })
 
-
+/* 
+Action:      INDEX
+Method:      GET
+URI:        /api/requests/patientrequests
+Description: Get all request for a spacific assistant
+*/
+router.get('/api/assistantrequests', requireToken,(req, res) => {
+    console.log(req.user._id,"sss");
+    const currentUser = User.find({_id: req.user._id});
+    console.log(currentUser._id);
+    Requests.find({assistantId: req.user._id})
+    .then((requests) => {
+        res.status(200).json({requests: requests})
+    })
+    .catch((error) => {
+        res.status(500).json({error: error})
+    })
+})
 
 // exports router to server
 module.exports = router
